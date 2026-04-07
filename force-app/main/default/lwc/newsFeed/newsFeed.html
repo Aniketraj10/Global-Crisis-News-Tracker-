@@ -1,0 +1,54 @@
+<template>
+    <div class="news-container">
+
+        <!-- MAP - full width on top -->
+        <c-crisis-map></c-crisis-map>
+
+        <!-- BOTTOM ROW - feed + timeline -->
+        <div style="display:flex; align-items: stretch">
+            
+            <div style="flex: 75%">
+                <div class="slds-m-around_medium">
+                    <select class="region-select" onchange={handleRegionChange}>
+                        <template for:each={regionOptions} for:item="option">
+                            <option key={option.value} value={option.value} selected={option.isSelected}>
+                                {option.label}
+                            </option>
+                        </template>
+                    </select>
+                </div>
+
+                <template lwc:if={formattedArticles}>
+                    <div class="slds-m-around_medium">
+                        <template for:each={formattedArticles} for:item="article">
+                            <div key={article.Id} class="slds-m-bottom_small slds-p-around_medium article-card">
+                                <h3 class="slds-text-heading_small slds-m-bottom_xx-small">
+                                    <a href={article.URL__c} target="_blank">{article.Title__c}</a>
+                                </h3>
+                                <p class="slds-text-color_weak slds-m-bottom_xx-small">
+                                    {article.Source_Name__c}
+                                </p>
+                                <p class="slds-text-color_weak">
+                                    {article.formattedDate}
+                                </p>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+
+                <template lwc:elseif={errorMessage}>
+                    <p>Error loading articles. Please try again</p>
+                </template>
+
+                <template lwc:else>
+                    <p>Loading Articles...</p>
+                </template>
+            </div>
+
+            <div style="flex: 25%">
+                <c-crisis-timeline region-name={region}></c-crisis-timeline>
+            </div>
+
+        </div>
+    </div>
+</template>

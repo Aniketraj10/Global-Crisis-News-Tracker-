@@ -1,0 +1,10 @@
+.map-wrapper {
+    width: 100%;
+    background-color: #1a1a2e;
+    padding: 8px 0;
+}
+
+.map-container {
+    height: 300px;
+    width: 100%;
+}

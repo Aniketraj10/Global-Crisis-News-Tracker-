@@ -1,0 +1,19 @@
+{
+  "folders": [
+    {
+      "path": "c:/Users/anike/OneDrive/Desktop/GlobalCrisisTracker"
+    }
+  ],
+  "settings": {
+    "eslint.workingDirectories": [
+      "c:/Users/anike/OneDrive/Desktop/GlobalCrisisTracker"
+    ],
+    "eslint.validate": [
+      "javascript",
+      "typescript"
+    ],
+    "eslint.options": {
+      "overrideConfigFile": "c:\\Users\\anike\\OneDrive\\Desktop\\GlobalCrisisTracker\\.eslintrc.json"
+    }
+  }
+}

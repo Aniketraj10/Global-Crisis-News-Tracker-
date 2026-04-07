@@ -1,0 +1,15 @@
+<template>
+    <div class="timeline-container">
+     <div class="timeline-line">
+          <template for:each = {events} for:item="event">
+               <div class={event.severityClass} key={event.Id}>
+                    <div class= "timeline-popup">
+                         <p>Event: {event.Event_Type__c}</p>
+                         <p>Severity: {event.Severity__c}</p>
+                         <p>Summary:{event.Summary__c}</p>
+                    </div>
+               </div>
+          </template>
+     </div>
+    </div>
+</template>
