@@ -38,7 +38,7 @@ Thumbs.db
 ehthumbs.db
 [Dd]esktop.ini
 $RECYCLE.BIN/
-
+.vscode
 # Local environment variables
 .env
 

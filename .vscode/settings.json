@@ -42,5 +42,6 @@
   "eslint.options": {
     "overrideConfigFile": "c:\\Users\\anike\\OneDrive\\Desktop\\GlobalCrisisTracker\\.eslintrc.json"
   },
-  "xml.preferences.showSchemaDocumentationType": "none"
+  "xml.preferences.showSchemaDocumentationType": "none",
+  "apex-ls-ts.logLevel": "warning"
 }

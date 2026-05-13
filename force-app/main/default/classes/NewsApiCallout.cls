@@ -70,6 +70,14 @@ public class NewsApiCallout implements Queueable, Database.AllowsCallouts {
             }
         }
         insert articlesToInsert;
+
+        System.debug('Inserted articles: ' + articlesToInsert.size());
+
+        // automatically trigger AI processing for newly inserted articles
+        if(articlesToInsert.size() > 0) {
+            System.enqueueJob(new ArticleAIProcessor());
+        }
+
         System.debug('Inserted articles: ' + articlesToInsert.size());
         } else {
             System.debug('Error: ' + response.getStatusCode() + ' ' + response.getStatus());
