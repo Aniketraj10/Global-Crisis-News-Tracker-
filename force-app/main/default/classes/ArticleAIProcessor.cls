@@ -20,7 +20,10 @@ public with sharing class ArticleAIProcessor  implements Queueable, Database.All
         req.setHeader('Authorization', 'Bearer ' + getApiKey()); // reads key from custom settings
 
         // prompt tells Groq exactly what format to respond in
-        String prompt = 'Analyze this news article and respond in exactly this format:\\nSENTIMENT: [Positive/Negative/Neutral]\\nSCORE: [0.0 to 1.0]\\nSUMMARY: [2 sentence summary]\\n\\nTitle: ' + title + '\\nDescription: ' + description;
+        String cleanTitle = title != null ? title.replaceAll('[\\n\\r"]', ' ') : '';
+        String cleanDescription = description != null ? description.replaceAll('[\\n\\r"]', ' ') : '';
+
+        String prompt = 'Analyze this news article and respond in exactly this format:\\nSENTIMENT: [Positive/Negative/Neutral]\\nSCORE: [0.0 to 1.0]\\nSUMMARY: [2 sentence summary]\\n\\nTitle: ' + cleanTitle + '\\nDescription: ' + cleanDescription;
 
         // build the JSON body with model and prompt
         String body = '{"model":"llama-3.1-8b-instant","messages":[{"role":"user","content":"' + prompt + '"}]}';
@@ -105,6 +108,13 @@ public with sharing class ArticleAIProcessor  implements Queueable, Database.All
         // Step 12: Bulk update all articles in one DML operation — governor limit best practice
         if(articlesToUpdate.size() > 0) {
             update articlesToUpdate;
+
+            // Step 13: Self chain — if unprocessed articles still exist, queue another run
+            // this ensures all articles get processed without waiting for next scheduler run
+            Integer remaining = [SELECT COUNT() FROM News_Article__c WHERE Is_Processed__c = false AND Title__c != null];
+            if(remaining > 0) {
+                System.enqueueJob(new ArticleAIProcessor());
+            }
         }
     }
 

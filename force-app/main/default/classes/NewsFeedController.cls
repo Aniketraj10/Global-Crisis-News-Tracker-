@@ -16,4 +16,9 @@ public with sharing class NewsFeedController {
 
         return [SELECT Name,Region__r.Name,Is_Processed__c,Published_At__c,Region__c,Sentiment__c,Sentiment_Score__c,Source_Name__c,Title__c,URL__c,Description__c,Crisis_Event__c  From News_Article__c where Region__r.Name =:region ORDER BY Published_At__c DESC LIMIT 50];
     }
+
+    @AuraEnabled (cacheable=true)
+    public static List<AggregateResult> getSentimentCounts(String region){
+        return [SELECT Sentiment__c, COUNT(Id) total FROM News_Article__c WHERE Region__r.Name = :region AND Is_Processed__c = true GROUP BY Sentiment__c];
+    }
 }

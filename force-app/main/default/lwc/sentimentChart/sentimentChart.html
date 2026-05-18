@@ -1,0 +1,66 @@
+<template>
+    <div class="chart-container">
+        
+        <!-- Chart Title -->
+        <h3 class="chart-title">SENTIMENT ANALYSIS</h3>
+
+        <!-- SVG Donut Chart -->
+        <svg viewBox="0 0 200 200" class="donut-chart">
+            
+            <!-- Background circle -->
+            <circle cx="100" cy="100" r="80"
+                fill="none"
+                stroke="#1a1a2e"
+                stroke-width="30"/>
+
+            <!-- Negative slice - Red -->
+            <circle cx="100" cy="100" r="80"
+                fill="none"
+                stroke="#ff4444"
+                stroke-width="30"
+                stroke-dasharray={negativeStroke}
+                stroke-dashoffset={negativeOffset}
+                transform="rotate(-90 100 100)"/>
+
+            <!-- Neutral slice - Grey -->
+            <circle cx="100" cy="100" r="80"
+                fill="none"
+                stroke="#888888"
+                stroke-width="30"
+                stroke-dasharray={neutralStroke}
+                stroke-dashoffset={neutralOffset}
+                transform="rotate(-90 100 100)"/>
+
+            <!-- Positive slice - Green -->
+            <circle cx="100" cy="100" r="80"
+                fill="none"
+                stroke="#00cc44"
+                stroke-width="30"
+                stroke-dasharray={positiveStroke}
+                stroke-dashoffset={positiveOffset}
+                transform="rotate(-90 100 100)"/>
+
+            <!-- Center text - total articles -->
+            <text x="100" y="95" text-anchor="middle" class="center-number">{total}</text>
+            <text x="100" y="115" text-anchor="middle" class="center-label">ARTICLES</text>
+
+        </svg>
+
+        <!-- Legend -->
+        <div class="legend">
+            <div class="legend-item">
+                <span class="legend-dot dot-negative"></span>
+                <span>Negative — {negative}</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot dot-neutral"></span>
+                <span>Neutral — {neutral}</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-dot dot-positive"></span>
+                <span>Positive — {positive}</span>
+            </div>
+        </div>
+
+    </div>
+</template>

@@ -1,13 +1,25 @@
 <template>
     <div class="news-container">
 
-        <!-- MAP - full width on top -->
-        <c-crisis-map></c-crisis-map>
+        <!-- TOP ROW - map (75%) + sentiment chart (25%) -->
+        <div style="display:flex; align-items: stretch">
+            <div style="flex: 75%">
+                <!-- Crisis map - dark CartoDB tiles with region markers -->
+                <c-crisis-map></c-crisis-map>
+            </div>
+            <div style="flex: 25%">
+                <!-- Sentiment chart - AI analyzed article sentiment breakdown -->
+                <c-sentiment-chart region={region}></c-sentiment-chart>
+            </div>
+        </div>
 
-        <!-- BOTTOM ROW - feed + timeline -->
+        <!-- BOTTOM ROW - article feed (75%) + timeline (25%) -->
         <div style="display:flex; align-items: stretch">
             
+            <!-- LEFT SIDE - region selector + article feed -->
             <div style="flex: 75%">
+                
+                <!-- Region dropdown - native select for full dark theme control -->
                 <div class="slds-m-around_medium">
                     <select class="region-select" onchange={handleRegionChange}>
                         <template for:each={regionOptions} for:item="option">
@@ -18,16 +30,23 @@
                     </select>
                 </div>
 
+                <!-- Article feed - shows when articles are loaded -->
                 <template lwc:if={formattedArticles}>
                     <div class="slds-m-around_medium">
                         <template for:each={formattedArticles} for:item="article">
                             <div key={article.Id} class="slds-m-bottom_small slds-p-around_medium article-card">
+                                
+                                <!-- Article title as clickable link -->
                                 <h3 class="slds-text-heading_small slds-m-bottom_xx-small">
                                     <a href={article.URL__c} target="_blank">{article.Title__c}</a>
                                 </h3>
+                                
+                                <!-- Source name -->
                                 <p class="slds-text-color_weak slds-m-bottom_xx-small">
                                     {article.Source_Name__c}
                                 </p>
+                                
+                                <!-- Formatted published date -->
                                 <p class="slds-text-color_weak">
                                     {article.formattedDate}
                                 </p>
@@ -36,16 +55,20 @@
                     </div>
                 </template>
 
+                <!-- Error state - shows when API call fails -->
                 <template lwc:elseif={errorMessage}>
                     <p>Error loading articles. Please try again</p>
                 </template>
 
+                <!-- Loading state - shows before data arrives -->
                 <template lwc:else>
                     <p>Loading Articles...</p>
                 </template>
             </div>
 
+            <!-- RIGHT SIDEBAR - timeline only now -->
             <div style="flex: 25%">
+                <!-- Crisis timeline - shows events with severity colored dots -->
                 <c-crisis-timeline region-name={region}></c-crisis-timeline>
             </div>
 
