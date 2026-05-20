@@ -20,7 +20,6 @@ export default class CrisisTimeline extends LightningElement {
                
           }
 
-          
      }
 
      

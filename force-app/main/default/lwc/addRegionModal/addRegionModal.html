@@ -1,0 +1,63 @@
+<template>
+    <!-- Modal Backdrop -->
+    <div class="modal-backdrop">
+        
+        <!-- Modal Box -->
+        <div class="modal-box">
+            
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h2 class="modal-title">ADD CRISIS REGION</h2>
+                <button class="close-btn" onclick={handleCancel}>✕</button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                
+                <div class="form-group">
+                    <label class="form-label">Region Name</label>
+                    <input type="text" class="form-input" placeholder="e.g. China" 
+                        onchange={handleName}/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Latitude</label>
+                    <input type="number" class="form-input" placeholder="e.g. 35.8617" 
+                        onchange={handleLatitude}/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Longitude</label>
+                    <input type="number" class="form-input" placeholder="e.g. 104.1954" 
+                        onchange={handleLongitude}/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Threat Level</label>
+                    <select class="form-input" onchange={handleThreatLevel}>
+                        <option value="">-- Select --</option>
+                        <option value="Critical">Critical</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Search Query</label>
+                    <input type="text" class="form-input" 
+                        placeholder="e.g. China military Taiwan conflict" 
+                        onchange={handleSearchQuery}/>
+                </div>
+
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick={handleCancel}>CANCEL</button>
+                <button class="btn-add" onclick={handleAdd}>ADD REGION</button>
+            </div>
+
+        </div>
+    </div>
+</template>

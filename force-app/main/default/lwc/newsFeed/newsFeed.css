@@ -1,3 +1,8 @@
+:host {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
 .news-container{
      background-color: #1a1a2e;
      min-height: 100vh;
@@ -40,5 +45,29 @@
 
 .region-select option {
     background-color: #16213e;
+    color: #ffffff;
+}
+
+.selector-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.add-region-btn {
+    background-color: transparent;
+    border: 1px solid #ff4444;
+    color: #ff4444;
+    padding: 10px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.add-region-btn:hover {
+    background-color: #ff4444;
     color: #ffffff;
 }

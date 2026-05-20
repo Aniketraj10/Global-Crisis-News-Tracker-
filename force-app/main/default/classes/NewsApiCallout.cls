@@ -17,11 +17,11 @@ public class NewsApiCallout implements Queueable, Database.AllowsCallouts {
 
         // read search query from Region__c record — no hardcoding needed
         // if Search_Query__c is blank, fall back to region name
-        String searchTerm = region.Search_Query__c != null ? region.Search_Query__c : regionName;//If the region has a custom search query — use it ("Iran conflict nuclear sanctions") If not — fall back to the region name ("Iran")
+        String searchTerm = region.Search_Query__c != null ? region.Search_Query__c : regionName;
         
-        String query = EncodingUtil.urlEncode(searchTerm, 'UTF-8');// EncodingUtil.urlEncode() converts search term to URL safe format
+        // EncodingUtil.urlEncode() converts search term to URL safe format
         // "Persian Gulf" becomes "Persian+Gulf" automatically
-
+        String query = EncodingUtil.urlEncode(searchTerm, 'UTF-8');
 
         String endpoint = 'https://newsapi.org/v2/everything?q=' + query + '&language=en&sortBy=publishedAt&apiKey=' + apiKey;
 
@@ -58,7 +58,8 @@ public class NewsApiCallout implements Queueable, Database.AllowsCallouts {
                     News_Article__c newArticle = new News_Article__c();
                     newArticle.Title__c = article.title;
                     newArticle.Description__c = article.description;
-                    newArticle.URL__c = article.url;
+                    // truncate URL to 255 characters — field limit on URL__c
+                    newArticle.URL__c = article.url != null ? article.url.left(255) : '';
                     newArticle.Published_At__c = DateTime.valueOf(article.publishedAt.replace('T', ' ').replace('Z', ''));
                     newArticle.Source_Name__c = article.source.name;
                     newArticle.Region__c = region.Id;

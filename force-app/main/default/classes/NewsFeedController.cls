@@ -21,4 +21,21 @@ public with sharing class NewsFeedController {
     public static List<AggregateResult> getSentimentCounts(String region){
         return [SELECT Sentiment__c, COUNT(Id) total FROM News_Article__c WHERE Region__r.Name = :region AND Is_Processed__c = true GROUP BY Sentiment__c];
     }
+
+    @AuraEnabled // no cacheable because this method writes data 
+    public static void createRegion(String name, Decimal latitude, Decimal longitude, String threatLevel, String searchQuery) {
+        Region__c newRegion = new Region__c();
+        newRegion.Name = name;
+        newRegion.Latitude__c = latitude;
+        newRegion.Longitude__c = longitude;
+        newRegion.Threat_Level__c = threatLevel;
+        newRegion.Search_Query__c = searchQuery;
+
+        insert newRegion;
+    }
+
+    @AuraEnabled
+    public static void fetchNewsForRegion(String regionName) {
+        System.enqueueJob(new NewsApiCallout(regionName));
+    }
 }

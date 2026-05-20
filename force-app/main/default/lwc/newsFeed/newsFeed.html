@@ -19,8 +19,10 @@
             <!-- LEFT SIDE - region selector + article feed -->
             <div style="flex: 75%">
                 
-                <!-- Region dropdown - native select for full dark theme control -->
-                <div class="slds-m-around_medium">
+                <!-- Region selector row - dropdown + add region button -->
+                <div class="slds-m-around_medium selector-row">
+                    
+                    <!-- Region dropdown - native select for full dark theme control -->
                     <select class="region-select" onchange={handleRegionChange}>
                         <template for:each={regionOptions} for:item="option">
                             <option key={option.value} value={option.value} selected={option.isSelected}>
@@ -28,6 +30,10 @@
                             </option>
                         </template>
                     </select>
+
+                    <!-- Add Region button - opens modal -->
+                    <button class="add-region-btn" onclick={handleAddRegion}>+ ADD REGION</button>
+
                 </div>
 
                 <!-- Article feed - shows when articles are loaded -->
@@ -66,12 +72,21 @@
                 </template>
             </div>
 
-            <!-- RIGHT SIDEBAR - timeline only now -->
+            <!-- RIGHT SIDEBAR - timeline only -->
             <div style="flex: 25%">
                 <!-- Crisis timeline - shows events with severity colored dots -->
                 <c-crisis-timeline region-name={region}></c-crisis-timeline>
             </div>
 
         </div>
+
+        <!-- Add Region Modal - only renders when showModal is true -->
+        <template lwc:if={showModal}>
+            <c-add-region-modal
+                onclose={handleModalClose}
+                onregionadded={handleRegionAdded}>
+            </c-add-region-modal>
+        </template>
+
     </div>
 </template>
