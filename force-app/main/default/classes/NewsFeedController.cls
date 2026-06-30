@@ -38,4 +38,71 @@ public with sharing class NewsFeedController {
     public static void fetchNewsForRegion(String regionName) {
         System.enqueueJob(new NewsApiCallout(regionName));
     }
+
+    @AuraEnabled
+    public static Map<String, String> lookupRegion(String regionName) {
+        
+        Map<String, String> result = new Map<String, String>();
+        
+        // Step 1 — Call Nominatim for coordinates
+        String nominatimUrl = 'https://nominatim.openstreetmap.org/search?q=' + 
+                            EncodingUtil.urlEncode(regionName, 'UTF-8') + 
+                            '&format=json&limit=1';
+        
+        HttpRequest nominatimReq = new HttpRequest();
+        nominatimReq.setEndpoint(nominatimUrl);
+        nominatimReq.setMethod('GET');
+        nominatimReq.setHeader('User-Agent', 'GlobalCrisisTracker/1.0');
+        nominatimReq.setTimeout(10000);
+        
+        HttpResponse nominatimRes = new Http().send(nominatimReq);
+        
+        if(nominatimRes.getStatusCode() == 200) {
+            List<Object> data = (List<Object>)JSON.deserializeUntyped(nominatimRes.getBody());
+            if(!data.isEmpty()) {
+                Map<String, Object> location = (Map<String, Object>)data[0];
+                result.put('latitude', String.valueOf(location.get('lat')));
+                result.put('longitude', String.valueOf(location.get('lon')));
+                result.put('displayName', String.valueOf(location.get('display_name')));
+            }
+        }
+        
+        // Step 2 — Call Groq for threat level and search query
+        API_Settings__c settings = API_Settings__c.getInstance();
+        String groqKey = settings.Groq_API_Key2__c;
+        
+        String prompt = 'For the region "' + regionName + '", respond in exactly this format:\\nTHREAT_LEVEL: [Critical/High/Medium/Low]\\nSEARCH_QUERY: [5-8 word news search query for crisis news]';
+        
+        String groqBody = '{"model":"llama-3.1-8b-instant","messages":[{"role":"user","content":"' + prompt + '"}]}';
+        
+        HttpRequest groqReq = new HttpRequest();
+        groqReq.setEndpoint('https://api.groq.com/openai/v1/chat/completions');
+        groqReq.setMethod('POST');
+        groqReq.setHeader('Content-Type', 'application/json');
+        groqReq.setHeader('Authorization', 'Bearer ' + groqKey);
+        groqReq.setTimeout(10000);
+        groqReq.setBody(groqBody);
+        
+        HttpResponse groqRes = new Http().send(groqReq);
+        
+        if(groqRes.getStatusCode() == 200) {
+            Map<String, Object> groqData = (Map<String, Object>)JSON.deserializeUntyped(groqRes.getBody());
+            List<Object> choices = (List<Object>)groqData.get('choices');
+            Map<String, Object> choice = (Map<String, Object>)choices[0];
+            Map<String, Object> message = (Map<String, Object>)choice.get('message');
+            String content = (String)message.get('content');
+            
+            List<String> lines = content.split('\n');
+            for(String line : lines) {
+                if(line.startsWith('THREAT_LEVEL:')) {
+                    result.put('threatLevel', line.split(': ')[1].trim());
+                }
+                if(line.startsWith('SEARCH_QUERY:')) {
+                    result.put('searchQuery', line.split(': ')[1].trim());
+                }
+            }
+        }
+        
+        return result;
+    }
 }

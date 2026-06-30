@@ -14,24 +14,33 @@
             <!-- Modal Body -->
             <div class="modal-body">
                 
+                <!-- Region Name + LOOKUP button side by side -->
                 <div class="form-group">
                     <label class="form-label">Region Name</label>
-                    <input type="text" class="form-input" placeholder="e.g. China" 
-                        onchange={handleName}/>
+                    <div style="display:flex; gap:8px;">
+                        <input type="text" class="form-input" placeholder="e.g. Ukraine" 
+                            onchange={handleName}/>
+                        <button class="btn-lookup" onclick={handleLookup} disabled={isLoading}>
+                            {lookupLabel}
+                        </button>
+                    </div>
                 </div>
 
+                <!-- Latitude - auto filled by LOOKUP -->
                 <div class="form-group">
                     <label class="form-label">Latitude</label>
                     <input type="number" class="form-input" placeholder="e.g. 35.8617" 
-                        onchange={handleLatitude}/>
+                        value={latitude} onchange={handleLatitude}/>
                 </div>
 
+                <!-- Longitude - auto filled by LOOKUP -->
                 <div class="form-group">
                     <label class="form-label">Longitude</label>
                     <input type="number" class="form-input" placeholder="e.g. 104.1954" 
-                        onchange={handleLongitude}/>
+                        value={longitude} onchange={handleLongitude}/>
                 </div>
 
+                <!-- Threat Level - auto filled by LOOKUP -->
                 <div class="form-group">
                     <label class="form-label">Threat Level</label>
                     <select class="form-input" onchange={handleThreatLevel}>
@@ -43,11 +52,12 @@
                     </select>
                 </div>
 
+                <!-- Search Query - auto filled by LOOKUP -->
                 <div class="form-group">
                     <label class="form-label">Search Query</label>
                     <input type="text" class="form-input" 
                         placeholder="e.g. China military Taiwan conflict" 
-                        onchange={handleSearchQuery}/>
+                        value={searchQuery} onchange={handleSearchQuery}/>
                 </div>
 
             </div>

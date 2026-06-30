@@ -108,3 +108,21 @@
 
 .btn-cancel:hover { border-color: #ffffff; color: #ffffff; }
 .btn-add:hover { background-color: #cc0000; }
+
+.btn-lookup {
+    background-color: #ff4444;
+    border: none;
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+    letter-spacing: 1px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.btn-lookup:disabled {
+    background-color: #444;
+    cursor: not-allowed;
+}

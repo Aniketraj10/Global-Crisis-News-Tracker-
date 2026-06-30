@@ -1,6 +1,7 @@
 import { LightningElement } from 'lwc';
 import createRegion from '@salesforce/apex/NewsFeedController.createRegion';
 import fetchNewsForRegion from '@salesforce/apex/NewsFeedController.fetchNewsForRegion';
+import lookupRegion from '@salesforce/apex/NewsFeedController.lookupRegion';
 
 export default class AddRegionModal extends LightningElement {
 
@@ -10,6 +11,9 @@ export default class AddRegionModal extends LightningElement {
     longitude = null;
     threatLevel = '';
     searchQuery = '';
+    isLoading = false; // shows loading state while lookup runs
+
+    
 
     // handle each input change
     handleName(event) { this.name = event.target.value; }
@@ -48,5 +52,37 @@ export default class AddRegionModal extends LightningElement {
         .catch(error => {
             console.log('Error creating region: ' + error);
         });
+    }
+
+    handleLookup() {
+    if(!this.name) {
+        alert('Please enter a region name first');
+        return;
+     }
+
+        this.isLoading = true;
+        
+        lookupRegion({ regionName: this.name })
+        .then(result => {
+            this.isLoading = false;
+            if(result.latitude) {
+                this.latitude = parseFloat(result.latitude);
+                this.longitude = parseFloat(result.longitude);
+            }
+            if(result.threatLevel) {
+                this.threatLevel = result.threatLevel;
+            }
+            if(result.searchQuery) {
+                this.searchQuery = result.searchQuery;
+            }
+        })
+        .catch(error => {
+            this.isLoading = false;
+            console.log('Lookup error: ' + error);
+        });
+    }
+
+    get lookupLabel() {
+    return this.isLoading ? 'LOOKING UP...' : 'LOOKUP';
     }
 }
